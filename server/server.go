@@ -83,7 +83,7 @@ func NewServer(ctx context.Context, profile *profile.Profile, store *store.Store
 	}
 	s.ID = serverID
 
-	embedFrontend(e)
+	embedFrontend(e, profile.Basedir)
 
 	secret := "usememos"
 	if profile.Mode == "prod" {

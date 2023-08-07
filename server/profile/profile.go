@@ -23,6 +23,8 @@ type Profile struct {
 	DSN string `json:"-"`
 	// Version is the current version of server
 	Version string `json:"version"`
+	// Basedir is the base dir for web files
+	Basedir string `json:"base_dir"`
 }
 
 func (p *Profile) IsDev() bool {

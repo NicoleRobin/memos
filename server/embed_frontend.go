@@ -21,7 +21,7 @@ func getFileSystem(path string) http.FileSystem {
 	return http.FS(fs)
 }
 
-func embedFrontend(e *echo.Echo) {
+func embedFrontend(e *echo.Echo, baseDir string) {
 	// Use echo static middleware to serve the built dist folder
 	// refer: https://github.com/labstack/echo/blob/master/middleware/static.go
 	e.Use(middleware.StaticWithConfig(middleware.StaticConfig{
@@ -30,7 +30,13 @@ func embedFrontend(e *echo.Echo) {
 		Filesystem: getFileSystem("dist"),
 	}))
 
-	assetsGroup := e.Group("assets")
+	var assetsGroup *echo.Group
+	if baseDir != "" {
+		assetsGroup = e.Group(baseDir)
+		assetsGroup = assetsGroup.Group("assets")
+	} else {
+		assetsGroup = e.Group("assets")
+	}
 	assetsGroup.Use(func(next echo.HandlerFunc) echo.HandlerFunc {
 		return func(c echo.Context) error {
 			c.Response().Header().Set(echo.HeaderCacheControl, "max-age=31536000, immutable")
